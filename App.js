@@ -13,7 +13,7 @@ const App=()=>{
       <AppStack.Navigator
       headerMode="none"
       >
-        <AppStack.Screen name="Onboarding" component={OnboardingScreen}/>
+        <AppStack.Screen  options={{headerShown:false}} name="Onboarding" component={OnboardingScreen}/>
         <AppStack.Screen name="Login" component={LoginScreen}/>
       </AppStack.Navigator>
     </NavigationContainer>

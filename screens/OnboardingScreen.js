@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, Button, Image } from 'react-native'
 import React from 'react'
 import Onboarding from 'react-native-onboarding-swiper'
+import { LogBox } from 'react-native';
 
 const OnboardingScreen = ({ navigation }) => {
+    LogBox.ignoreAllLogs();
     return (
         <Onboarding
             pages={[
@@ -13,7 +15,7 @@ const OnboardingScreen = ({ navigation }) => {
                     subtitle: 'Done with React Native Onboarding Swiper',
                 },
                 {
-                    backgroundColor: '#fff',
+                    backgroundColor: '#FF9D00',
                     image: <Image source={require('../assets/onboarding-img2.png')} />,
                     title: 'Onboarding 2',
                     subtitle: 'Done with React Native Onboarding Swiper',
