@@ -39,17 +39,6 @@ const App = () => {
   else{
     return <LoginScreen/>
   }
-
-  return (
-    <NavigationContainer>
-      <AppStack.Navigator
-        headerMode="none"
-      >
-        <AppStack.Screen options={{ headerShown: false }} name="Onboarding" component={OnboardingScreen} />
-        <AppStack.Screen name="Login" component={LoginScreen} />
-      </AppStack.Navigator>
-    </NavigationContainer>
-  )
 }
 
 export default App;
