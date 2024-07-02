@@ -1,12 +1,15 @@
 import React from "react";
-import {View, Text, Button, StyleSheet, Alert, TouchableOpacity} from 'react-native'
+import {View, Text, Button, StyleSheet, TouchableOpacity} from 'react-native'
+import Octicons from 'react-native-vector-icons/Octicons'
 
-const LoginScreen=()=>{
+
+const LoginScreen=({navigation})=>{
     return(
         <View style={styles.container} >
+            <Octicons  name="person" size={25} color="#666" />
             <Text>Login Screen</Text>
             <TouchableOpacity>
-                <Text style={{color:'blue'}}>Click Here</Text>
+                <Text style={{color:'blue'}} onPress={()=>navigation.navigate('Signup')} >Click Here</Text>
             </TouchableOpacity>
         </View>
     )
