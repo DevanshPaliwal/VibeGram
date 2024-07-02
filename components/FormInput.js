@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, View } from 'react-native'
 import React from 'react'
 import Octicons from 'react-native-vector-icons/Octicons'
-import { windowHeight, windowWidth } from '../utils/Dimentions'
+import { windowHeight, windowWidth } from '../utils/Dimensions'
 
 const FormInput = ({labelValue, placeholderText, iconType, ...rest}) => {
   return (
