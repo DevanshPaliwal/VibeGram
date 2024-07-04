@@ -6,16 +6,15 @@ import FormButton from "../components/FormButton";
 import SocialButton from "../components/SocialButton";
 
 
-const LoginScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation }) => {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
+    const [confirmPassword,setConfirmPassword]=useState()
 
 
     return (
         <View style={styles.container} >
-            <Image source={require('../assets/VibeGram/logo-transparent-png.png')}
-                style={styles.logo} />
-
+            <Text style={styles.text}>Create an account</Text>
             <FormInput
                 labelValue={email}
                 onChangeText={(userEmail) => setEmail(userEmail)}
@@ -34,46 +33,57 @@ const LoginScreen = ({ navigation }) => {
                 secureTextEntry={true}
             />
 
+            <FormInput
+                labelValue={confirmPassword}
+                onChangeText={(userPassword) => setConfirmPassword(userPassword)}
+                placeholderText='Confirm Password'
+                iconType='lock'
+                secureTextEntry={true}
+            />
+
             <FormButton
-                buttonTitle='Sign In'
+                buttonTitle='Sign Up'
                 onPress={() => console.log("signed in")}
             />
 
-            <TouchableOpacity onPress={() => { }} style={styles.forgotButton}>
-                <Text style={styles.navButtonText}>Forgot password?</Text>
-            </TouchableOpacity>
+            <View style={styles.textPrivate}>
+                <Text style={styles.color_textPrivate}>By signing up, you confirm that you accept our </Text>
+                <TouchableOpacity onPress={() => console.log('Terms of service')}>
+                    <Text style={[styles.color_textPrivate, { color: '#e88832' }]}>Terms of Service</Text>
+                </TouchableOpacity>
+                <Text style={styles.color_textPrivate}> and </Text>
+                <Text style={[styles.color_textPrivate, { color: '#e88832' }]}>Privacy Policy</Text>
+
+            </View>
 
             <SocialButton
-                buttonTitle='Sign in with Google'
+                buttonTitle='Sign up with Google'
                 color='#de4d41'
                 backgroundColor='#f5e7ea'
                 onPress={() => { }}
                 btnType='google'
             />
+
             <View style={styles.viewText}>
-                <Text style={[styles.navButtonText,{color:'black'}]} >
-                    Don't have an account?</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                    <Text style={styles.navButtonText}> Sign up</Text>
+                <Text style={[styles.navButtonText, { color: 'black' }]}>Already have an account?</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.forgotButton}>
+                    <Text style={styles.navButtonText}> Sign in</Text>
                 </TouchableOpacity>
             </View>
+
         </View>
     )
 }
 
-export default LoginScreen
+export default SignupScreen
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#f9fafd',
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        paddingTop: 50
-    },
-    logo: {
-        height: 200,
-        width: 200,
-        resizeMode: 'cover',
     },
     text: {
         fontFamily: 'Kufam-SemiBoldItalic',
@@ -82,16 +92,25 @@ const styles = StyleSheet.create({
         color: '#051d5f',
     },
     navButton: {
-        marginTop: 35,
-    },
-    forgotButton: {
-        marginVertical: 18,
+        marginTop: 15,
     },
     navButtonText: {
         fontSize: 18,
         fontWeight: '500',
         color: '#2e64e5',
         fontFamily: 'Lato-Regular',
+    },
+    textPrivate: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginVertical: 35,
+        justifyContent: 'center',
+    },
+    color_textPrivate: {
+        fontSize: 13,
+        fontWeight: '400',
+        fontFamily: 'Lato-Regular',
+        color: 'grey',
     },
     viewText: {
         flexDirection: 'row',
