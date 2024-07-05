@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native'
-import Octicons from 'react-native-vector-icons/Octicons'
 import FormInput from "../components/FormInput";
 import FormButton from "../components/FormButton";
 import SocialButton from "../components/SocialButton";
+import { AuthContext } from "../navigation/AuthProvider";
 
 
 const SignupScreen = ({ navigation }) => {
@@ -11,6 +11,7 @@ const SignupScreen = ({ navigation }) => {
     const [password, setPassword] = useState()
     const [confirmPassword,setConfirmPassword]=useState()
 
+    const {register}=useContext(AuthContext)
 
     return (
         <View style={styles.container} >
@@ -43,7 +44,7 @@ const SignupScreen = ({ navigation }) => {
 
             <FormButton
                 buttonTitle='Sign Up'
-                onPress={() => console.log("signed in")}
+                onPress={() => register(email,password)}
             />
 
             <View style={styles.textPrivate}>

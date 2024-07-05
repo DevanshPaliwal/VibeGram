@@ -7,7 +7,7 @@ import LoginScreen from '../screens/LoginScreen'
 import SignupScreen from "../screens/SignupScreen";
 import Octicons from 'react-native-vector-icons/Octicons'
 
-const AppStack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator()
 
 const AuthStack = () => {
   const [isFirst, setIsFirst] = useState(null)
@@ -34,21 +34,21 @@ const AuthStack = () => {
     routeName = 'Login'
   }
   return (
-    <AppStack.Navigator
+    <Stack.Navigator
       initialRouteName={routeName}
       headerMode="none"
     >
-      <AppStack.Screen
+      <Stack.Screen
         name="Onboarding"
         component={OnboardingScreen}
         options={{ header: () => null }}
       />
-      <AppStack.Screen
+      <Stack.Screen
         name="Login"
         component={LoginScreen}
         options={{ header: () => null }}
       />
-      <AppStack.Screen
+      <Stack.Screen
         name="Signup"
         component={SignupScreen}
         options={({ navigation }) => ({
@@ -72,7 +72,7 @@ const AuthStack = () => {
           ),
         })}
       />
-    </AppStack.Navigator>
+    </Stack.Navigator>
   )
 }
 
