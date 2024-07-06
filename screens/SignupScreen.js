@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native'
 import FormInput from "../components/FormInput";
 import FormButton from "../components/FormButton";
 import SocialButton from "../components/SocialButton";
@@ -9,9 +9,9 @@ import { AuthContext } from "../navigation/AuthProvider";
 const SignupScreen = ({ navigation }) => {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
-    const [confirmPassword,setConfirmPassword]=useState()
+    const [confirmPassword, setConfirmPassword] = useState()
 
-    const {register}=useContext(AuthContext)
+    const { register } = useContext(AuthContext)
 
     return (
         <View style={styles.container} >
@@ -44,7 +44,7 @@ const SignupScreen = ({ navigation }) => {
 
             <FormButton
                 buttonTitle='Sign Up'
-                onPress={() => register(email,password)}
+                onPress={() => register(email, password)}
             />
 
             <View style={styles.textPrivate}>
@@ -57,13 +57,16 @@ const SignupScreen = ({ navigation }) => {
 
             </View>
 
-            <SocialButton
-                buttonTitle='Sign up with Google'
-                color='#de4d41'
-                backgroundColor='#f5e7ea'
-                onPress={() => { }}
-                btnType='google'
-            />
+            {Platform.OS === 'android' ? (
+                <SocialButton
+                    buttonTitle='Sign up with Google'
+                    color='#de4d41'
+                    backgroundColor='#f5e7ea'
+                    onPress={() => { }}
+                    btnType='google'
+                />
+            ) : null
+            }
 
             <View style={styles.viewText}>
                 <Text style={[styles.navButtonText, { color: 'black' }]}>Already have an account?</Text>

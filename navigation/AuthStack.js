@@ -6,12 +6,14 @@ import OnboardingScreen from '../screens/OnboardingScreen'
 import LoginScreen from '../screens/LoginScreen'
 import SignupScreen from "../screens/SignupScreen";
 import Octicons from 'react-native-vector-icons/Octicons'
+import { GoogleSignin } from "@react-native-community/google-signin";
 
 const Stack = createNativeStackNavigator()
 
 const AuthStack = () => {
   const [isFirst, setIsFirst] = useState(null)
   let routeName
+
   useEffect(() => {
     AsyncStorage.getItem('alreadyLaunched').then(value => {
       if (value == null) {
@@ -21,6 +23,10 @@ const AuthStack = () => {
       else {
         setIsFirst(false)
       }
+    })
+
+    GoogleSignin.configure({
+      webClientId: '780375185-oqorh92roihv028pd2am6ec2rabeo2it.apps.googleusercontent.com',
     })
   }, [])
 
@@ -59,8 +65,8 @@ const AuthStack = () => {
             shadowColor: '#f9fafd',
           },
           headerLeft: () => (
-            <View style={{marginLeft:3}}>
-              <TouchableOpacity onPress={()=>navigation.navigate('Login')}>
+            <View style={{ marginLeft: 3 }}>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Octicons
                   name='chevron-left'
                   size={35}

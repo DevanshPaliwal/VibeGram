@@ -30,8 +30,8 @@ const Routes = () => {
     }
 
     return (
-        // if user is available, show appstack (homescreen)
-        // otherwise show authstack (onboarding and login/signup screen)
+        // if user is available, show AppStack (homescreen)
+        // otherwise show AuthStack (onboarding and login/signup screen)
         <NavigationContainer>
             {user ? <AppStack/> :<AuthStack />}
         </NavigationContainer>
