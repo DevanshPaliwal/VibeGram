@@ -26,7 +26,7 @@ const AuthStack = () => {
     })
 
     GoogleSignin.configure({
-      webClientId: '780375185-oqorh92roihv028pd2am6ec2rabeo2it.apps.googleusercontent.com',
+      webClientId: 'Your web client id',
     })
   }, [])
 
