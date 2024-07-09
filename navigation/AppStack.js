@@ -23,11 +23,13 @@ const FeedStack = ({ navigation }) => (
         headerTitleAlign: 'center',
         headerTitleStyle: {
           color: '#2e64e5',
-          fontSize: 20.
+          fontSize: 20,
+          
         },
         headerStyle: {
           shadowStyle: '#fff',
           elevation: 0,
+
           
           
           

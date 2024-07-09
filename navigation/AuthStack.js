@@ -60,7 +60,7 @@ const AuthStack = () => {
         options={({ navigation }) => ({
           title: '',
           headerStyle: {
-            backgroundColor: '#6DA7F8',
+            backgroundColor: '#B3E7F7',
             elevation: 0,
             shadowColor: '#f9fafd',
           },
