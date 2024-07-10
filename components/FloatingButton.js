@@ -23,7 +23,7 @@ const FloatingButton = () => {
        bottom:20
     },
     img:{
-      backgroundColor:'red',
+      backgroundColor:'#80D2F9',
       height:60,
       width:60,
       borderRadius:30,
