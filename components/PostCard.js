@@ -48,7 +48,7 @@ const PostCard = ({item}) => {
                     <InteractionText active={item.liked}>{likeText}</InteractionText>
                 </Interaction>
                 <Interaction>
-                    <Ionicons name="chatbubble-outline" size={25} />
+                    <Ionicons name="chatbubble-outline" size={25} color='#333' />
                     <InteractionText>{commentText}</InteractionText>
                 </Interaction>
             </InteractionWrapper>
