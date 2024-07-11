@@ -6,12 +6,10 @@ import Octicons from 'react-native-vector-icons/Octicons'
 const FloatingButton = () => {
   return(
     <View style={styles.container}>
-      <TouchableOpacity style={styles.img}>
+      <TouchableOpacity style={styles.img} >
         <Octicons name="device-camera" size={30} color="white"/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.img}>
-        <Octicons name="image" size={30} color="white"/>
-      </TouchableOpacity>
+      
     </View>
   )
 }
