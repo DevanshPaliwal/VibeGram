@@ -16,3 +16,29 @@ export const InputField = styled.TextInput`
     width:90%;
     color:#5C5E5F;
 `
+
+export const AddImage = styled.Image`
+    width: 100%;
+    height: 250px;
+    margin-bottom: 15px;
+`
+
+export const StatusWrapper = styled.View`
+    justify-content: center;
+    align-items: center;
+`
+
+export const SubmitBtn = styled.TouchableOpacity`
+    flex-direction: row;
+    justify-content: center;
+    background-color: #2e64e515;
+    border-radius: 5px;
+    padding: 8px 25px;
+`
+
+export const SubmitBtnText = styled.Text`
+    font-size: 18px;
+    font-family: 'Lato-Bold';
+    font-weight: bold;
+    color: #2e64e5;
+`
