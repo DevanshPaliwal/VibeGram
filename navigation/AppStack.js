@@ -37,7 +37,7 @@ const FeedStack = ({ navigation }) => (
         headerRight: () => (
           <View style={{ marginRight: 10 }}>
             <TouchableOpacity onPress={() => navigation.navigate('AddPost')}>
-              <Octicons name="plus" size={22} color='#2e64e5'/>
+              <Octicons name="plus" size={28} color='#2e64e5'/>
             </TouchableOpacity>
           </View>
         ),
