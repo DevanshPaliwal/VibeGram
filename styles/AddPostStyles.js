@@ -32,7 +32,7 @@ export const SubmitBtn = styled.TouchableOpacity`
     flex-direction: row;
     justify-content: center;
     background-color: #2e64e515;
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 8px 25px;
 `
 

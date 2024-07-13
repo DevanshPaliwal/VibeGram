@@ -1,15 +1,20 @@
 import { View, Text, StyleSheet, TextInput, Platform, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { AddImage, InputField, InputWrapper, StatusWrapper, SubmitBtn, SubmitBtnText } from '../styles/AddPostStyles'
 import Octicons from 'react-native-vector-icons/Octicons'
 import ImagePicker from 'react-native-image-crop-picker'
 import storage from '@react-native-firebase/storage'
+import firestore from '@react-native-firebase/firestore'
+import { AuthContext } from '../navigation/AuthProvider'
 
 const AddPostScreen = () => {
+
+  const { user, logout } = useContext(AuthContext)
 
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
+  const [post, setPost] = useState(null);
   const takePhotoFromCamera = async () => {
     try {
       await ImagePicker.openCamera({
@@ -44,37 +49,66 @@ const AddPostScreen = () => {
     }
   };
 
-
   const submitPost = async () => {
-    const uploadUri = image;
-    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
-    
-    const extension = filename.split('.').pop();
-    const name=filename.split('.').slice(0,-1).join('.');
-    filename=name+Date.now()+'.'+extension;
+    const imageUrl = await uploadImage();
+    console.log('Image URL: ' + imageUrl);
+    firestore()
+      .collection('posts')
+      .add({
+        userId: user.uid,
+        post: post,
+        postImg: imageUrl,
+        postTime: firestore.Timestamp.fromDate(new Date()),
+        likes: null,
+        comments: null
+      }).then(() => {
+        console.log('Post Added!')
+        Alert.alert('Post Published!');
+        setPost(null);
+      }).catch((error) => {
+        console.log('Something went wrong while adding to firestore ', error)
+      })
+  }
 
-    setUploading(true)
-    setTransferred(0)
+  const uploadImage = async () => {
+    if (image != null) {
+      const uploadUri = image;
+      let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
 
-    const task = storage().ref(filename).putFile(uploadUri)
-    // set transferred state 
-    // while image is transferring, play some animation
-    task.on('state_changed', taskSnapshot => {
-      console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
-      setTransferred(
-        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100
-      )
-    });
+      const extension = filename.split('.').pop();
+      const name = filename.split('.').slice(0, -1).join('.');
+      filename = name + Date.now() + '.' + extension;
 
-    try {
-      await task
-      setUploading(false)
-      Alert.alert('Image Uploaded Successfully')
+      setUploading(true)
+      setTransferred(0)
+
+      const storageRef = storage().ref(`photos/${filename}`)
+      const task = storageRef.putFile(uploadUri)
+      // set transferred state 
+      // while image is transferring, play some animation
+      task.on('state_changed', taskSnapshot => {
+        console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
+        setTransferred(
+          Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100
+        )
+      });
+
+      try {
+        await task;
+
+        const url = await storageRef.getDownloadURL()
+        setUploading(false)
+        setImage(null)
+        return url;
+      }
+      catch (error) {
+        console.log(error)
+        return null
+      }
     }
-    catch (error) {
-      console.log(error)
+    else{
+      return null;
     }
-    setImage(null)
   }
 
   return (
@@ -86,6 +120,8 @@ const AddPostScreen = () => {
           placeholderTextColor='#A1A3A4'
           multiline
           numberOfLines={4}
+          value={post}
+          onChangeText={(content) => setPost(content)}
         />
         {
           uploading ? (
