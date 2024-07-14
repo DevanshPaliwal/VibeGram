@@ -3,8 +3,7 @@ import styled from 'styled-components'
 export const Container = styled.View`
     background-color: #fff;
     flex:1;
-    align-items:center;
-    
+    align-items:center; 
 `;
 
 export const Card = styled.View`

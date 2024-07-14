@@ -9,7 +9,7 @@ import { AuthContext } from '../navigation/AuthProvider'
 
 const AddPostScreen = () => {
 
-  const { user, logout } = useContext(AuthContext)
+  const { user} = useContext(AuthContext)
 
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
