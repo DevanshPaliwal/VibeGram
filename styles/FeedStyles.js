@@ -9,8 +9,9 @@ export const Container = styled.View`
 export const Card = styled.View`
     background-color: #f9f9f9;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border-radius: 10px;
+    margin-top:10px;
 `;
 
 export const UserInfo = styled.View`
