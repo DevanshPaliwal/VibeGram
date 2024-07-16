@@ -11,7 +11,7 @@ export const Card = styled.View`
     width: 100%;
     margin-bottom: 10px;
     border-radius: 10px;
-    margin-top:10px;
+    margin-top:5px;
 `;
 
 export const UserInfo = styled.View`
