@@ -1,7 +1,9 @@
 import { View, Text } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Bubble, GiftedChat, Send } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat, Send, InputToolbar } from 'react-native-gifted-chat';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Octicons from 'react-native-vector-icons/Octicons'
+
 
 const ChatScreen = () => {
 
@@ -54,7 +56,6 @@ const ChatScreen = () => {
           right: {
             color: 'white'
           }
-
         }}
       />
     )
@@ -70,6 +71,21 @@ const ChatScreen = () => {
     )
   }
 
+  const scrollToBottomComponent=()=>{
+    return(
+      <Octicons name="arrow-down" color="black" size={25} />
+    )
+  }
+
+  const renderInputToolbar = (props) =>{
+    
+    <InputToolbar {...props}
+    containerStyle={{
+      backgroundColor:'blue'
+    }}
+    />
+  }
+
   return (
     <GiftedChat
       messages={messages}
@@ -80,7 +96,9 @@ const ChatScreen = () => {
       renderBubble={renderBubble}
       alwaysShowSend={true}
       renderSend={renderSend}
-
+      scrollToBottom
+      scrollToBottomComponent={scrollToBottomComponent}
+      // renderInputToolbar={renderInputToolbar}
     />
   );
 }
