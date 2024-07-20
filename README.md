@@ -23,3 +23,8 @@
 - Run the development server (npm start or equivalent command).
 - Create a user account and login.
 - Start using the app's features!
+
+## Contribution
+- Fork this repository.
+- Make changes.
+- Create a pull request.
