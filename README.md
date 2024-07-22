@@ -29,4 +29,4 @@
 - Make changes.
 - Create a pull request.
 
-Thanks for contributing!
+Thanks for visiting!
