@@ -28,3 +28,5 @@
 - Fork this repository.
 - Make changes.
 - Create a pull request.
+
+Thanks for contributing!
