@@ -77,7 +77,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
 
     const [posts, setPosts] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -247,7 +247,7 @@ const HomeScreen = () => {
                 <Container>
                     <FlatList
                         data={posts}
-                        renderItem={({ item }) => <PostCard item={item} onDelete={handleDelete} />}
+                        renderItem={({ item }) => <PostCard item={item} onDelete={handleDelete} onPress={()=>navigation.navigate('OtherUserProfile',{userId:item.userId})} />}
                         keyExtractor={item => item.id}
                         showsVerticalScrollIndicator={false}
 

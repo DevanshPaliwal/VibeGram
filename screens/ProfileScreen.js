@@ -6,7 +6,7 @@ import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 import PostCard from '../components/PostCard'
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation, route }) => {
 
     const { user, logout } = useContext(AuthContext)
 
@@ -14,9 +14,8 @@ const ProfileScreen = () => {
     const [loading, setLoading] = useState(true);
     const [deleted, setDeleted] = useState(false);
 
-    // fetch posts data from firebase and set 
-    // loading to false, which removes the
-    // skeleton view
+    // only show the posts made by 
+    // logged in user
     const fetchPosts = async () => {
         try {
             const list = [];
@@ -69,14 +68,31 @@ const ProfileScreen = () => {
             >
                 <Image style={styles.userImg} source={require('../assets/users/user-8.jpg')} />
                 <Text style={styles.userName}>Jenny Doe</Text>
+                <Text style={{ color: 'black' }}>{route.params ? route.params.userId : user.uid}</Text>
                 <Text style={styles.aboutUser}>This is about section of Jenny Doe</Text>
                 <View style={styles.userBtnWrapper}>
-                    <TouchableOpacity style={styles.userBtn} onPress={() => { }}>
-                        <Text style={styles.userBtnText} >Message</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.userBtn} onPress={() => { }}>
-                        <Text style={styles.userBtnText} >Follow</Text>
-                    </TouchableOpacity>
+                    {
+                        route.params ? (
+                            <>
+                                <TouchableOpacity style={styles.userBtn} onPress={() => { }}>
+                                    <Text style={styles.userBtnText} >Message</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.userBtn} onPress={() => { }}>
+                                    <Text style={styles.userBtnText} >Follow</Text>
+                                </TouchableOpacity>
+                            </>
+                        ) : (
+                            <>
+                                <TouchableOpacity style={styles.userBtn} onPress={() => navigation.navigate('EditProfile')}>
+                                    <Text style={styles.userBtnText} >Edit Profile</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.userBtn} onPress={() => logout()}>
+                                    <Text style={styles.userBtnText} >Logout</Text>
+                                </TouchableOpacity>
+                            </>
+                        )
+                    }
+
                 </View>
                 <View style={styles.userInfoWrapper}>
                     <View style={styles.userInfoItem}>
@@ -92,17 +108,24 @@ const ProfileScreen = () => {
                         <Text style={styles.userInfoSubTitle}>Following</Text>
                     </View>
                 </View>
+                
                 {
-                    posts.map((item) => {
-                        return (
-                            <PostCard
-                                key={item.id}
-                                item={item}
-                                onDelete={handleDelete}
-                            />
-                        )
+                    // if logged in user visits someone else's page
+                    // then dont show anything
+                    // otherwise show logged in user's posts
+                    !route.params ? (
+                        posts.map((item) => {
+                            return (
+                                <PostCard
+                                    key={item.id}
+                                    item={item}
+                                    onDelete={handleDelete}
+                                />
+                            )
 
-                    })
+                        })
+                    ) : null
+
                 }
             </ScrollView>
         </SafeAreaView>
