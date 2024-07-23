@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useContext } from 'react'
 import {
     Container,
@@ -14,7 +14,7 @@ import { Image } from 'react-native-reanimated/lib/typescript/Animated'
 import { AuthContext } from '../navigation/AuthProvider'
 import moment from 'moment'
 
-const PostCard = ({ item,onDelete }) => {
+const PostCard = ({ item, onDelete, onPress }) => {
     const { user } = useContext(AuthContext)
 
     likeIcon = item.liked ? 'heart' : 'heart-outline'
@@ -42,7 +42,9 @@ const PostCard = ({ item,onDelete }) => {
             <UserInfo>
                 <UserImage source={{ uri: item.userImg.toString() }} />
                 <UserInfoText>
-                    <UserName>{item.userName}</UserName>
+                    <TouchableOpacity onPress={onPress}>
+                        <UserName>{item.userName}</UserName>
+                    </TouchableOpacity>
                     <PostTime>{moment(item.postTime.toDate()).fromNow()}</PostTime>
                 </UserInfoText>
             </UserInfo>
@@ -59,7 +61,7 @@ const PostCard = ({ item,onDelete }) => {
                     <InteractionText>{commentText}</InteractionText>
                 </Interaction >
                 {user.uid == item.userId ?
-                    <Interaction onPress={()=>onDelete(item.id)}>
+                    <Interaction onPress={() => onDelete(item.id)}>
                         <Ionicons name="trash" size={25} color='#333' />
                     </Interaction> : null
                 }

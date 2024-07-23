@@ -63,7 +63,7 @@ const FeedStack = ({ navigation }) => (
       }}
     />
 
-    <Stack.Screen name="HomeProfile"
+    <Stack.Screen name="OtherUserProfile"
       component={ProfileScreen}
       options={{
         title: '',
