@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
     Container,
     Card, UserInfo,
@@ -13,9 +13,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Image } from 'react-native-reanimated/lib/typescript/Animated'
 import { AuthContext } from '../navigation/AuthProvider'
 import moment from 'moment'
+import firestore from '@react-native-firebase/firestore'
+import storage from '@react-native-firebase/storage'
 
 const PostCard = ({ item, onDelete, onPress }) => {
     const { user } = useContext(AuthContext)
+    const [userData, setUserData] = useState(null);
 
     likeIcon = item.liked ? 'heart' : 'heart-outline'
     likedColor = item.liked ? '#2e64e5' : '#333'
@@ -37,13 +40,33 @@ const PostCard = ({ item, onDelete, onPress }) => {
     else {
         commentText = 'Comment'
     }
+
+    const getUser = async () => {
+        await firestore()
+            .collection('users')
+            .doc(item.userId)
+            .get()
+            .then((documentSnapshot) => {
+                if (documentSnapshot.exists) {
+                    console.log('User Data: ', documentSnapshot.data())
+                    setUserData(documentSnapshot.data())
+                }
+            })
+    }
+
+    useEffect(()=>{
+        getUser()
+    },[])
     return (
         <Card>
             <UserInfo>
-                <UserImage source={{ uri: item.userImg.toString() }} />
+                <UserImage source={{ uri: userData?userData.userImg ||
+             'https://i.ibb.co/090DJgq/Screenshot-2024-07-29-171112.png'
+             : 'https://i.ibb.co/090DJgq/Screenshot-2024-07-29-171112.png'
+              }} />
                 <UserInfoText>
                     <TouchableOpacity onPress={onPress}>
-                        <UserName>{item.userName}</UserName>
+                        <UserName>{userData?userData.fname || 'Unkown' :'Unknown'} {userData?userData.lname || 'User' :'User'}</UserName>
                     </TouchableOpacity>
                     <PostTime>{moment(item.postTime.toDate()).fromNow()}</PostTime>
                 </UserInfoText>
