@@ -1,12 +1,99 @@
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, ImageBackground, Animated } from 'react-native'
-import React, { useState } from 'react'
-import Octicons from 'react-native-vector-icons/Octicons'
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, ImageBackground, Animated, Alert } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import ImagePicker from 'react-native-image-crop-picker'
-
+import { AuthContext } from '../navigation/AuthProvider'
+import firestore from '@react-native-firebase/firestore'
+import storage from '@react-native-firebase/storage'
 
 const EditProfileScreen = () => {
+  const { user, logout } = useContext(AuthContext)
   const [image, setImage] = useState()
+  const [userData, setUserData] = useState(null)
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
+
+
+  const getUser = async () => {
+    const currentUser = await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then((documentSnapshot) => {
+        if (documentSnapshot.exists) {
+          console.log('User Data: ', documentSnapshot.data())
+          setUserData(documentSnapshot.data())
+        }
+      })
+  }
+
+  const handleUpdate = async () => {
+    let imgUrl=await uploadImage()
+    if(imgUrl==null && userData.userImg){
+      imgUrl=userData.userImg;
+    }
+    firestore()
+    .collection('users')
+    .doc(user.uid)
+    .update({
+      fname:userData.fname,
+      lname:userData.lname,
+      phone:userData.phone,
+      userImg:imgUrl
+    })
+    .then(()=>{
+      console.log('User updated!')
+      Alert.alert(
+        'Profile Updated!',
+        'Your profile has been updated successfully.'
+      )
+    })
+  }
+
+  useEffect(()=>{
+    getUser()
+  },[])
+
+  const uploadImage = async () => {
+    if (image != null) {
+      const uploadUri = image;
+      let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+      const extension = filename.split('.').pop();
+      const name = filename.split('.').slice(0, -1).join('.');
+      filename = name + Date.now() + '.' + extension;
+
+      setUploading(true)
+      setTransferred(0)
+
+      const storageRef = storage().ref(`photos/${filename}`)
+      const task = storageRef.putFile(uploadUri)
+      // set transferred state 
+      // while image is transferring, play some animation
+      task.on('state_changed', taskSnapshot => {
+        console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
+        setTransferred(
+          Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100
+        )
+      });
+
+      try {
+        await task;
+
+        const url = await storageRef.getDownloadURL()
+        setUploading(false)
+        setImage(null)
+        return url;
+      }
+      catch (error) {
+        console.log(error)
+        return null
+      }
+    }
+    else{
+      return null;
+    }
+  }
 
   const takePhotoFromCamera = () => {
     ImagePicker.openCamera({
@@ -32,6 +119,8 @@ const EditProfileScreen = () => {
     });
   }
 
+  
+
 
   return (
     <View style={styles.container}>
@@ -44,14 +133,17 @@ const EditProfileScreen = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-            <ImageBackground source={{uri:image}}
+            <ImageBackground source={{ uri: image?image:userData?userData.userImg ||
+             'https://i.ibb.co/090DJgq/Screenshot-2024-07-29-171112.png'
+             : 'https://i.ibb.co/090DJgq/Screenshot-2024-07-29-171112.png'
+              }}
               style={{ height: 100, width: 100 }}
               imageStyle={{ borderRadius: 15 }}
             >
             </ImageBackground>
           </View>
 
-          <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold', color: 'black' }}>John Doe</Text>
+          <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold', color: 'black' }}>{userData?userData.fname :''} {userData?userData.lname:''}</Text>
         </View>
         <View style={styles.action}>
           <FontAwesome name="user" size={20} color="grey" />
@@ -59,6 +151,8 @@ const EditProfileScreen = () => {
             placeholder='First Name'
             placeholderTextColor="#666666"
             autoCorrect={false}
+            value={userData ? userData.fname : ''}
+            onChangeText={(txt) => setUserData({...userData, fname: txt})}
             style={styles.textInput}
           />
         </View>
@@ -68,6 +162,8 @@ const EditProfileScreen = () => {
             placeholder='Last Name'
             placeholderTextColor="#666666"
             autoCorrect={false}
+            value={userData ? userData.lname : ''}
+            onChangeText={(txt) => setUserData({...userData, lname: txt})}
             style={styles.textInput}
           />
         </View>
@@ -77,27 +173,20 @@ const EditProfileScreen = () => {
             placeholder='Phone No.'
             placeholderTextColor="#666666"
             autoCorrect={false}
+            value={userData ? userData.phone : ''}
+            onChangeText={(txt) => setUserData({...userData, phone: txt})}
             style={styles.textInput}
             keyboardType='number-pad'
           />
         </View>
-        <View style={styles.action}>
-          <FontAwesome name="envelope" size={20} color="grey" />
-          <TextInput
-            placeholder='Email ID'
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={styles.textInput}
-            keyboardType='email-address'
-          />
-        </View>
+        
         <TouchableOpacity style={styles.commandButton2} onPress={() => takePhotoFromCamera()}>
           <Text style={styles.panelButtonTitle}>Take Photo</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.commandButton2} onPress={() => choosePhotoFromLibrary()}>
           <Text style={styles.panelButtonTitle}>Choose Photo from Library</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.commandButton} onPress={() => { }}>
+        <TouchableOpacity style={styles.commandButton} onPress={() => handleUpdate()}>
           <Text style={styles.panelButtonTitle}>Update</Text>
         </TouchableOpacity>
       </View>

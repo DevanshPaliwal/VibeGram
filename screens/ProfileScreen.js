@@ -13,6 +13,7 @@ const ProfileScreen = ({ navigation, route }) => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deleted, setDeleted] = useState(false);
+    const [userData, setUserData] = useState(null);
 
     // only show the posts made by 
     // logged in user
@@ -21,7 +22,7 @@ const ProfileScreen = ({ navigation, route }) => {
             const list = [];
             await firestore()
                 .collection('posts')
-                .where('userId', '==', user.uid)
+                .where('userId', '==', route.params ? route.params.userId : user.uid)
                 .orderBy('postTime', 'desc')
                 .get()
                 .then((querySnapshot) => {
@@ -53,12 +54,31 @@ const ProfileScreen = ({ navigation, route }) => {
             console.log(error)
         }
     }
+
+
+    const getUser = async () => {
+        await firestore()
+            .collection('users')
+            .doc(route.params ? route.params.userId : user.uid)
+            .get()
+            .then((documentSnapshot) => {
+                if (documentSnapshot.exists) {
+                    console.log('User Data: ', documentSnapshot.data())
+                    setUserData(documentSnapshot.data())
+                }
+            })
+    }
+
+
     // render the homescreen initially
     useEffect(() => {
+        getUser();
         fetchPosts();
-    }, [])
+        navigation.addListener("focus", () => setLoading(!loading))
+    }, [navigation, loading])
 
-    const handleDelete = () => { }
+    const handleDelete = () => {}
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
             <ScrollView
@@ -66,10 +86,15 @@ const ProfileScreen = ({ navigation, route }) => {
                 contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                 showsVerticalScrollIndicator={false}
             >
-                <Image style={styles.userImg} source={require('../assets/users/user-8.jpg')} />
-                <Text style={styles.userName}>Jenny Doe</Text>
+                <Image style={styles.userImg} source={{
+                    uri: userData ? userData.userImg ||
+                        'https://i.ibb.co/090DJgq/Screenshot-2024-07-29-171112.png'
+                        : 'https://i.ibb.co/090DJgq/Screenshot-2024-07-29-171112.png'
+                }} />
+                <Text style={styles.userName}>{userData ? userData.fname || 'Unknown' : 'Unknown'} {userData ? userData.lname || 'User' : 'User'}</Text>
                 <Text style={{ color: 'black' }}>{route.params ? route.params.userId : user.uid}</Text>
-                <Text style={styles.aboutUser}>This is about section of Jenny Doe</Text>
+                {/* <Text style={styles.aboutUser}>This is about section of Jenny Doe</Text> */}
+                <Text></Text>
                 <View style={styles.userBtnWrapper}>
                     {
                         route.params ? (
@@ -96,7 +121,7 @@ const ProfileScreen = ({ navigation, route }) => {
                 </View>
                 <View style={styles.userInfoWrapper}>
                     <View style={styles.userInfoItem}>
-                        <Text style={styles.userInfoTitle}>22</Text>
+                        <Text style={styles.userInfoTitle}>{posts.length}</Text>
                         <Text style={styles.userInfoSubTitle}>Posts</Text>
                     </View>
                     <View style={styles.userInfoItem}>
@@ -108,12 +133,12 @@ const ProfileScreen = ({ navigation, route }) => {
                         <Text style={styles.userInfoSubTitle}>Following</Text>
                     </View>
                 </View>
-                
+
                 {
                     // if logged in user visits someone else's page
                     // then dont show anything
                     // otherwise show logged in user's posts
-                    !route.params ? (
+                    
                         posts.map((item) => {
                             return (
                                 <PostCard
@@ -124,7 +149,7 @@ const ProfileScreen = ({ navigation, route }) => {
                             )
 
                         })
-                    ) : null
+                    
 
                 }
             </ScrollView>
